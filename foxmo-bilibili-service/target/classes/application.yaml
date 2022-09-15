@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: test
+
+mybatis:
+  config-locations: classpath:mapper/*.xml
+#
+  type-aliases-package: com.foxmo.bilibili.mapper

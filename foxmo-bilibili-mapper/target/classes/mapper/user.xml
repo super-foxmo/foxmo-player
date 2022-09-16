@@ -6,4 +6,44 @@
 <!--namespace绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.foxmo.bilibili.mapper.UserMapper">
 
+    <insert id="insertUser" parameterType="com.foxmo.bilibili.domain.User" useGeneratedKeys="true" keyProperty="id">
+        insert into
+            t_user(phone,email,password,salt,createTime)
+        values
+            (#{phone},#{email},#{password},#{salt},#{createTime})
+    </insert>
+
+    <select id="selectUserByPhone" parameterType="String" resultType="com.foxmo.bilibili.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            phone = #{phone}
+    </select>
+
+    <insert id="insertUserInfo" parameterType="com.foxmo.bilibili.domain.UserInfo">
+        insert into
+            t_user_info(user_id,nick,avatar,sign,gender,birth,createTime)
+        values
+            (#{userId},#{nick},#{avatar},#{sign},#{gender},#{birth},#{createTime})
+    </insert>
+
+    <select id="selectUserById" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            id = #{userId}
+    </select>
+
+    <select id="selectUserInfoByUserId" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.UserInfo">
+        select
+            *
+        from
+            t_user_info
+        where
+            userId = #{userId}
+    </select>
 </mapper>

@@ -4,5 +4,7 @@ spring:
 
 mybatis:
   config-locations: classpath:mapper/*.xml
-#
   type-aliases-package: com.foxmo.bilibili.mapper
+#  开启驼峰命名转换
+  configuration:
+    map-underscore-to-camel-case: true

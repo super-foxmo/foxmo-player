@@ -44,6 +44,6 @@
         from
             t_user_info
         where
-            userId = #{userId}
+            user_id = #{userId}
     </select>
 </mapper>

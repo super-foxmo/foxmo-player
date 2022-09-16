@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String login(User user) throws Exception{
         String phone = user.getPhone();
+        //查询数据库是否有该账号
         User dbUser = userMapper.selectUserByPhone(phone);
         if(dbUser == null){
             throw new ConditionException("当前用户不存在！");
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
             throw new ConditionException("密码错误！");
         }
         //生成用户身份令牌
-        return TokenUtil.generateToken(user.getId());
+        return TokenUtil.generateToken(dbUser.getId());
     }
 
     @Override

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.foxmo.bilibili.mapper.FollowingGroupMapper">
+    <select id="selectFollowingGroupById" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.FollowingGroup">
+        select
+            *
+        from
+            t_following_group
+        where
+            id = #{id}
+    </select>
+
+    <select id="selectFollowingGroupByType" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.FollowingGroup">
+        select
+            *
+        from
+            t_following_group
+        where
+            `type` = #{type}
+    </select>
+
+    <select id="seleFollowingGroupByUserId" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.FollowingGroup">
+        select
+            *
+        from
+             t_following_group
+        where
+            userId = #{userId} or `type` in ('0','1','2')
+    </select>
+</mapper>

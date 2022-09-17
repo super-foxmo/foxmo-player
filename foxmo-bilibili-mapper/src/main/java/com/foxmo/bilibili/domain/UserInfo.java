@@ -1,5 +1,7 @@
 package com.foxmo.bilibili.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.util.Date;
 
 public class UserInfo {
@@ -13,10 +15,13 @@ public class UserInfo {
     private Date createTime;
     private Date updateTime;
 
+    @TableField(exist = false)
+    private Boolean followed;
+
     public UserInfo() {
     }
 
-    public UserInfo(Long id, Long userId, String nick, String sign, String avatar, String gender, String birth, Date createTime, Date updateTime) {
+    public UserInfo(Long id, Long userId, String nick, String sign, String avatar, String gender, String birth, Date createTime, Date updateTime, Boolean followed) {
         this.id = id;
         this.userId = userId;
         this.nick = nick;
@@ -26,6 +31,7 @@ public class UserInfo {
         this.birth = birth;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.followed = followed;
     }
 
     public Long getId() {
@@ -98,5 +104,13 @@ public class UserInfo {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Boolean getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(Boolean followed) {
+        this.followed = followed;
     }
 }

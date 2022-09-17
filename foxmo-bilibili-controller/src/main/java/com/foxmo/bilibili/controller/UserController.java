@@ -3,14 +3,12 @@ package com.foxmo.bilibili.controller;
 import com.foxmo.bilibili.controller.support.UserSupport;
 import com.foxmo.bilibili.domain.JsonResponse;
 import com.foxmo.bilibili.domain.User;
+import com.foxmo.bilibili.domain.UserInfo;
 import com.foxmo.bilibili.service.impl.UserServiceImpl;
 import com.foxmo.bilibili.util.RSAUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -57,6 +55,25 @@ public class UserController {
         Long userId = userSupport.getCurrentUserId();
         User user = userService.queryUserById(userId);
         return new JsonResponse<>(user);
+    }
+
+    @ResponseBody
+    @PutMapping("/users")
+    public JsonResponse<String> modifyUser(@RequestBody User user) throws Exception{
+        //获取当前用户ID
+        Long userId = userSupport.getCurrentUserId();
+        user.setId(userId);
+        userService.modifyUser(user);
+        return JsonResponse.success();
+    }
+
+    @ResponseBody
+    @PutMapping("/user-infos")
+    public JsonResponse<String> modifyUserInfo(@RequestBody UserInfo userInfo){
+        Long userId = userSupport.getCurrentUserId();
+        userInfo.setUserId(userId);
+        userService.modifyUserInfo(userInfo);
+        return JsonResponse.success();
     }
 
 

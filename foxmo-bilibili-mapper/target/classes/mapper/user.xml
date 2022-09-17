@@ -46,4 +46,61 @@
         where
             user_id = #{userId}
     </select>
+
+    <update id="updateUser" parameterType="com.foxmo.bilibili.domain.User">
+        update
+            t_user
+        set 
+            <if test=" phone != null and phone != '' ">
+                phone = #{phone},
+            </if>
+            <if test=" email != null and email != '' ">
+                email = #{email},
+            </if>
+            <if test=" password != null and password != '' ">
+                password = #{password},
+            </if>
+            updateTime = #{updateTime}
+        where
+            id = #{id}
+    </update>
+
+    <update id="updateUserInfo" parameterType="com.foxmo.bilibili.domain.UserInfo">
+        update
+            t_user_info
+        set
+            <if test=" nick != null and nick != '' ">
+                nick = #{nick},
+            </if>
+            <if test=" avatar != null and avatar != '' ">
+                avatar = #{avatar},
+            </if>
+            <if test=" sign != null and sign != '' ">
+                sign = #{sign},
+            </if>
+            <if test=" gender != null and gender !='' ">
+                gender = #{gender},
+            </if>
+            <if test=" birth != null and birth != '' ">
+                birth = #{birth},
+            </if>
+            updateTime = #{updateTime}
+        where
+            user_id = #{userId}
+    </update>
+
+    <select id="selectUserInfosByIds" resultType="com.foxmo.bilibili.domain.UserInfo">
+        select 
+            *
+        from
+            t_user_info
+        <where>
+            <if test="followingIdSet != null and followingIdSet.size > 0">
+                user_id in
+                <foreach collection="followingIdSet" item="userId" separator="," open="(" close=")">
+                    #{userId}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

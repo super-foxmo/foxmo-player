@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -104,6 +106,54 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = userMapper.selectUserInfoByUserId(userId);
         user.setUserInfo(userInfo);
         return user;
+    }
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return 1：成功   0：失败
+     * @throws Exception
+     */
+    @Override
+    public Integer modifyUser(User user) throws Exception{
+        Long id = user.getId();
+        //判断数据库中是否有该账号信息
+        User dbUser = userMapper.selectUserById(id);
+        if (dbUser == null){
+            throw new ConditionException("用户不存在！");
+        }
+        String password = user.getPassword();
+        String rawPassword;
+        if (!StringUtils.isNullOrEmpty(password)){
+            //RSA解密
+            rawPassword = RSAUtil.decrypt(password);
+            //MD5加密
+            String MD5Password = MD5Util.sign(rawPassword,dbUser.getSalt(),"UTF-8");
+            user.setPassword(MD5Password);
+        }
+        user.setUpdateTime(new Date());
+
+        return userMapper.updateUser(user);
+    }
+
+    /**
+     * 修改用户详细资料
+     * @param userInfo
+     */
+    @Override
+    public void modifyUserInfo(UserInfo userInfo) {
+        Long userId = userInfo.getUserId();
+        User user = userMapper.selectUserById(userId);
+        if (user == null){
+            throw new ConditionException("用户不存在！");
+        }
+        userInfo.setUpdateTime(new Date());
+        userMapper.updateUserInfo(userInfo);
+    }
+
+    @Override
+    public List<UserInfo> getUserInfosByIds(Set<Long> followingIdSet) {
+        return userMapper.selectUserInfosByIds(followingIdSet);
     }
 
 

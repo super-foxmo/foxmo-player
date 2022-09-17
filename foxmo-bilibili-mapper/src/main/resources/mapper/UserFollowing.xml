@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.foxmo.bilibili.mapper.UserFollowingMapper">
+    <delete id="deleteUserFollowingByUIdAndFId">
+        delete from
+            t_user_following
+        where
+            userId = #{userId}
+        and
+            followingId = #{followingId}
+    </delete>
+
+    <insert id="insertUserFollowing" parameterType="com.foxmo.bilibili.domain.UserFollowing">
+        insert into
+            t_user_following(userId,followingId,groupId,createTime)
+        values
+            (#{userId},#{followingId},#{groupId},#{createTime})
+    </insert>
+
+    <select id="selectUserFollowingsByUserId" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.UserFollowing">
+        select
+            *
+        from
+            t_user_following
+        where
+            userId = #{userId}
+    </select>
+
+    <select id="selectUserFollowingsByFollowingId" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.UserFollowing">
+        select
+            *
+        from
+            t_user_following
+        where
+            followingId = #{followingId}
+    </select>
+</mapper>

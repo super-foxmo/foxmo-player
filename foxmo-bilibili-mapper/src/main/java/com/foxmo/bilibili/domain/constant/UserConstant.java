@@ -11,4 +11,8 @@ public class UserConstant {
     public static final String DEFAULT_BIRTH = "2000-10-10";
     //默认昵称
     public static final String DEFAULT_NICK = "foxmo";
+    //关注默认分组
+    public static final Long USER_FOLLOWING_GROUP_TYPE_DEFAULT = 2L;
+    //全部关注
+    public static final String USER_FOLLOWING_GROUP_ALL_NAME = "全部关注";
 }

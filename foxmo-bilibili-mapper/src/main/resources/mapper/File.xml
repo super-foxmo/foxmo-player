@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.foxmo.bilibili.mapper.FileMapper">
+    <insert id="addFile" parameterType="com.foxmo.bilibili.domain.File">
+        insert into
+            t_file(
+                   url,
+                   `type`,
+                   md5,
+                   createTime
+        )
+        values(
+                    #{url},
+                    #{type},
+                    #{md5},
+                    #{createTime}
+              )
+    </insert>
+
+    <select id="getFileByMD5" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.File">
+        select
+            *
+        from
+            t_file
+        where
+            md5 = #{fileMD5}
+    </select>
+</mapper>

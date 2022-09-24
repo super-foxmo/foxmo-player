@@ -103,4 +103,69 @@
             </if>
         </where>
     </select>
+    
+    <select id="pageCountUserInfos" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select 
+            count(1)
+        from
+            t_user_info
+        <where>
+            <if test="nick != null and nick != ''">
+                nick like '%${nick}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPageListUserInfo" parameterType="java.util.Map" resultType="com.foxmo.bilibili.domain.UserInfo">
+        select
+            *
+        from
+        t_user_info
+        <where>
+            <if test="nick != null and nick != ''">
+                nick like '%${nick}%'
+            </if>
+        </where>
+        order id desc
+        limit #{start},#{limit}
+    </select>
+
+    <select id="selectUserByPhoneOrEmail" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            phone = #{phone} or email = #{email}
+    </select>
+
+    <delete id="deleteRefreshToken">
+        delete from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken}
+    </delete>
+
+    <insert id="insertRefreshToken">
+        insert into
+            t_refresh_token(
+                    userId,
+                    refreshToken,
+                    createTime
+        )
+        values(
+                    #{userId},
+                    #{refreshToken},
+                    #{createTime}
+              )
+    </insert>
+
+    <select id="selectRefreshTokenDetail" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.RefreshTokenDetail">
+        select
+            *
+        from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken}
+    </select>
 </mapper>

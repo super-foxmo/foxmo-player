@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.foxmo.bilibili.mapper.AuthRoleMapper">
+    <select id="selectAuthRoleByCode" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.auth.AuthRole">
+        select
+            *
+        from
+            t_auth_role
+        where
+            code = #{code}
+    </select>
+</mapper>

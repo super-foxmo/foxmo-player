@@ -12,5 +12,9 @@ public interface FollowingGroupMapper {
 
     FollowingGroup selectFollowingGroupByType(String type);
 
-    List<FollowingGroup> seleFollowingGroupByUserId(Long userId);
+    List<FollowingGroup> selectFollowingGroups(Long userId);
+
+    Long insertFollowingGroup(FollowingGroup followingGroup);
+
+    List<FollowingGroup> selectFollowingGroupsByUserId(Long userId);
 }

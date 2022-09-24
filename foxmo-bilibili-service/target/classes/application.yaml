@@ -2,9 +2,44 @@ spring:
   profiles:
     active: test
 
+#servlet
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+
 mybatis:
   config-locations: classpath:mapper/*.xml
   type-aliases-package: com.foxmo.bilibili.mapper
 #  开启驼峰命名转换
   configuration:
     map-underscore-to-camel-case: true
+
+# sql-debug
+logging:
+  level:
+    com:
+      foxmo:
+        bilibili:
+          mapper: debug
+
+#redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 500
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 0
+
+
+#minio
+minio:
+  endpoint: http://192.168.250.130:9000
+  access-key: admin
+  secret-key: password

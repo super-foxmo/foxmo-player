@@ -6,6 +6,7 @@ public class File {
     private Integer id;
     private String fileName;
     private String bucket;
+    private String url;
     private String type;
     private String md5;
     private Date createTime;
@@ -13,10 +14,11 @@ public class File {
     public File() {
     }
 
-    public File(Integer id, String fileName, String bucket, String type, String md5, Date createTime) {
+    public File(Integer id, String fileName, String bucket, String url, String type, String md5, Date createTime) {
         this.id = id;
         this.fileName = fileName;
         this.bucket = bucket;
+        this.url = url;
         this.type = type;
         this.md5 = md5;
         this.createTime = createTime;
@@ -44,6 +46,14 @@ public class File {
 
     public void setBucket(String bucket) {
         this.bucket = bucket;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getType() {

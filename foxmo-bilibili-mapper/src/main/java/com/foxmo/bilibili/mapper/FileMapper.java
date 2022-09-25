@@ -8,5 +8,9 @@ public interface FileMapper {
 
     File getFileByMD5(String fileMd5);
 
-    void addFile(File dbFile);
+    void insertFile(File file);
+
+    void deleteFile(String fileMD5);
+
+    File selectFileByMD5(String fileMD5);
 }

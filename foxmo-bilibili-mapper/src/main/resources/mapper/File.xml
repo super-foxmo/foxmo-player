@@ -5,15 +5,19 @@
 
 <!--namespace绑定一个对应的Dao/Mapper接口-->
 <mapper namespace="com.foxmo.bilibili.mapper.FileMapper">
-    <insert id="addFile" parameterType="com.foxmo.bilibili.domain.File">
+    <insert id="insertFile" parameterType="com.foxmo.bilibili.domain.File">
         insert into
             t_file(
+                   fileName,
+                   bucket,
                    url,
                    `type`,
                    md5,
                    createTime
         )
         values(
+                    #{fileName},
+                    #{bucket},
                     #{url},
                     #{type},
                     #{md5},
@@ -22,6 +26,22 @@
     </insert>
 
     <select id="getFileByMD5" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.File">
+        select
+            *
+        from
+            t_file
+        where
+            md5 = #{fileMD5}
+    </select>
+
+    <delete id="deleteFile" parameterType="java.lang.String">
+        delete from
+            t_file
+        where
+            md5 = #{fileMD5}
+    </delete>
+
+    <select id="selectFileByMD5" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.File">
         select
             *
         from

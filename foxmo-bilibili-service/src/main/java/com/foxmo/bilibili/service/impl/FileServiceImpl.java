@@ -23,6 +23,9 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private MinioUtil minioUtil;
 
+    //默认文件下载路径
+    private static final String DEFAULT_FILE_PATH = "D:/电影/minio-data/";
+
     /*
     @Autowired
     private FastDFSUtil fastDFSUtil;
@@ -115,6 +118,11 @@ public class FileServiceImpl implements FileService {
         fileMapper.deleteFile(fileMD5);
         //删除服务器文件数据
         minioUtil.removeObject(bucketName,fileName);
+    }
+
+    @Override
+    public void downloadFile(String bucketName, String fileName) throws Exception{
+        minioUtil.downloadFile(bucketName,fileName,DEFAULT_FILE_PATH + fileName);
     }
 
 }

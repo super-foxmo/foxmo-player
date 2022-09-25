@@ -57,6 +57,14 @@ public class FileController {
         return JsonResponse.success();
     }
 
+    //文件下载
+    @GetMapping("/minio-files")
+    public JsonResponse<String> downloadFile(String bucketName,String fileName) throws Exception{
+        fileService.downloadFile(bucketName,fileName);
+
+        return JsonResponse.success();
+    }
+
     @GetMapping("/test")
     public JsonResponse<String> getInfo(MultipartFile file) throws Exception{
 //        List<Bucket> allBuckets = minioUtil.getAllBuckets();
@@ -84,7 +92,6 @@ public class FileController {
 //        }
 //        MultipartFile multipartFile = minioUtil.getMultipartFile(inputStream);
 //        String fileMD5 = MD5Util.getFileMD5(multipartFile);
-
 
         return JsonResponse.success();
     }

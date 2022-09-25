@@ -4,12 +4,14 @@ import com.foxmo.bilibili.config.properties.MinioProperties;
 import com.foxmo.bilibili.domain.exception.ConditionException;
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
 
 @Configuration
+@EnableConfigurationProperties(MinioProperties.class)
 public class MinioConfig {
     @Autowired
     private MinioProperties minioProperties;

@@ -13,4 +13,6 @@ public interface FileService {
     String uploadFile(MultipartFile multipartFile, String bucketName) throws Exception;
 
     void deleteFile(String bucket, String fileName) throws Exception;
+
+    void downloadFile(String bucketName, String fileName) throws Exception;
 }

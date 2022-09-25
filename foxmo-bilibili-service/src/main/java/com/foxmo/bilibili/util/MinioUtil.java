@@ -81,29 +81,6 @@ public class MinioUtil {
 //    }
 
     /**
-     * 上传文件
-     */
-    public String uploadFile(MultipartFile file, String bucketName) throws Exception {
-        //判断文件是否为空
-        if (null == file || 0 == file.getSize()) {
-            return null;
-        }
-        //判断存储桶是否存在  不存在则创建
-        createBucket(bucketName);
-        //文件名
-        String fileName = file.getOriginalFilename();
-
-        //开始上传
-        minioClient.putObject(
-                PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(
-                                file.getInputStream(), file.getSize(), -1)
-                        .contentType(file.getContentType())
-                        .build());
-        String url = minioProperties.getEndpoint() + "/" + bucketName + "/" + fileName;
-        return url;
-    }
-
-    /**
      * 创建bucket
      */
     public void createBucket(String bucketName) throws Exception {
@@ -178,56 +155,6 @@ public class MinioUtil {
         minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(objectName).stream(stream, size, -1).contentType(contextType).build());
     }
 
-    /**
-     * 获取⽂件信息
-     *
-     * @param bucketName bucket名称
-     * @param objectName ⽂件名称
-     * @throws Exception https://docs.minio.io/cn/java-minioClient-api-reference.html#statObject
-     */
-    public StatObjectResponse getObjectInfo(String bucketName, String objectName) throws Exception {
-        return minioClient.statObject(StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
-    }
-
-    /**
-     * 删除⽂件
-     *
-     * @param bucketName bucket名称
-     * @param objectName ⽂件名称
-     * @throws Exception https://docs.minio.io/cn/java-minioClient-apireference.html#removeObject
-     */
-    public void removeObject(String bucketName, String objectName) throws Exception {
-        minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
-    }
-
-
-    /***
-     * 上传视频
-     * @param file
-     * @param bucketName
-     * @return
-     * @throws Exception
-     */
-    public String uploadVideo(MultipartFile file, String bucketName) throws Exception {
-        //判断文件是否为空
-        if (null == file || 0 == file.getSize()) {
-            return null;
-        }
-        //判断存储桶是否存在  不存在则创建
-        createBucket(bucketName);
-        //文件名
-        String originalFilename = file.getOriginalFilename();
-
-        //开始上传
-        minioClient.putObject(
-                PutObjectArgs.builder().bucket(bucketName).object(originalFilename).stream(
-                                file.getInputStream(), file.getSize(), -1)
-                        .contentType("video/mp4")
-                        .build());
-        String url = minioProperties.getEndpoint() + "/" + bucketName + "/" + originalFilename;
-        return url;
-    }
-
     //二进制文件转换MultipartFile
     public MultipartFile getMultipartFile(InputStream inputStream) {
         System.out.println("二进制转换MultipartFile开始");
@@ -241,5 +168,78 @@ public class MinioUtil {
         }
         return mockMultipartFile;
     }
+
+    /**
+     * 获取⽂件信息
+     *
+     * @param bucketName bucket名称
+     * @param objectName ⽂件名称
+     * @throws Exception https://docs.minio.io/cn/java-minioClient-api-reference.html#statObject
+     */
+    public StatObjectResponse getObjectInfo(String bucketName, String objectName) throws Exception {
+        return minioClient.statObject(StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
+    }
+
+    /**
+     * 上传文件
+     */
+    public String uploadFile(MultipartFile file, String bucketName) throws Exception {
+        //判断文件是否为空
+        if (null == file || 0 == file.getSize()) {
+            return null;
+        }
+        //判断存储桶是否存在  不存在则创建
+        createBucket(bucketName);
+        //文件名
+        String fileName = file.getOriginalFilename();
+
+        //开始上传
+        minioClient.putObject(
+                PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(
+                                file.getInputStream(), file.getSize(), -1)
+                        .contentType(file.getContentType())
+                        .build());
+        String url = minioProperties.getEndpoint() + "/" + bucketName + "/" + fileName;
+        return url;
+    }
+
+    /**
+     * 删除⽂件
+     *
+     * @param bucketName bucket名称
+     * @param objectName ⽂件名称
+     * @throws Exception https://docs.minio.io/cn/java-minioClient-apireference.html#removeObject
+     */
+    public void removeObject(String bucketName, String objectName) throws Exception {
+        minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
+    }
+
+    /**
+     * 下载文件
+     * @param bucketName    桶名
+     * @param fileName      文件名
+     * @param filePath      文件下载到本地磁盘的路径
+     */
+    public void downloadFile(String bucketName,String fileName,String filePath) throws Exception{
+//        try{
+//            minioClient.downloadObject(
+//                    DownloadObjectArgs.builder()
+//                            .bucket(bucketName)
+//                            .object(fileName)
+//                            .filename(filePath)
+//                            .build());
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new ConditionException("文件下载失败！");
+//        }
+
+        minioClient.downloadObject(
+                DownloadObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .filename(filePath)
+                        .build());
+    }
+
 
 }

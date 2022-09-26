@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.foxmo.bilibili.mapper.UserCoinMapper">
+    <select id="selectUserCionByUserId" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.UserCoin">
+        select
+            *
+        from
+            t_user_coin
+        where
+            userId = #{userId};
+    </select>
+
+    <insert id="insertUserCoin" parameterType="com.foxmo.bilibili.domain.UserCoin">
+        insert into
+            t_user_coin(
+                userId,
+                `amount`,
+                createTime
+        )
+        values(
+               #{userId},
+               #{amount},
+               #{createTime}
+              );
+    </insert>
+    
+    <update id="updateUserCoin" parameterType="com.foxmo.bilibili.domain.UserCoin">
+        update
+            t_user_coin
+        set
+            amount = #{amount},
+            updateTime = #{updateTime}
+        where
+            userId = #{userId};
+    </update>
+</mapper>

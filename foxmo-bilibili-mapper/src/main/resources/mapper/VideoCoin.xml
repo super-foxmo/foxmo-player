@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.foxmo.bilibili.mapper.VideoCoinMapper">
+    <select id="selectVideoCoinByUserIdAndVideoId" resultType="com.foxmo.bilibili.domain.VideoCoin">
+        select
+            *
+        from
+            t_video_coin
+        where
+            userId = #{userId}
+        and
+            videoId = #{videoId};
+    </select>
+    <insert id="insertVideoCoin" parameterType="com.foxmo.bilibili.domain.VideoCoin">
+        insert into
+            t_video_coin(
+                userId,
+                videoId,
+                amount,
+                createTime
+        )
+        values(
+               #{userId},
+               #{videoId},
+               #{amount},
+               #{createTime}
+              );
+    </insert>
+    
+    <update id="updateVideoCoin" parameterType="com.foxmo.bilibili.domain.VideoCoin">
+        update
+            t_video_coin
+        set
+            amount = #{amount},
+            updateTime = #{updateTime}
+        where
+            userId = #{userId}
+          and
+            videoId = #{videoId};
+    </update>
+
+    <select id="selectVideoCoinCountByVideoId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select
+            sum(amount)
+        from
+            t_video_coin
+        where
+            videoId = #{videoId}
+    </select>
+</mapper>

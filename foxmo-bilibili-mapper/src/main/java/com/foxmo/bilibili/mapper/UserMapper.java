@@ -43,4 +43,6 @@ public interface UserMapper {
     Integer insertRefreshToken(@Param("refreshToken") String refreshToken, @Param("userId") Long userId, @Param("createTime") Date createTime);
 
     RefreshTokenDetail selectRefreshTokenDetail(String refreshToken);
+
+    List<UserInfo> batchGetUserInfoByUserIds(@Param("userIdList") Set<Long> userIdList);
 }

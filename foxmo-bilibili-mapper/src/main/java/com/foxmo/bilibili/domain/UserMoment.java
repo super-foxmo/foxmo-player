@@ -4,10 +4,15 @@ import java.util.Date;
 
 public class UserMoment {
     private Long id;
+
     private Long userId;
+
     private String type;
+
     private Long contentId;
+
     private Date createTime;
+
     private Date updateTime;
 
     public UserMoment() {

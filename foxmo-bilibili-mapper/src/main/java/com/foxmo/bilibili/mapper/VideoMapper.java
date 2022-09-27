@@ -1,9 +1,6 @@
 package com.foxmo.bilibili.mapper;
 
-import com.foxmo.bilibili.domain.Video;
-import com.foxmo.bilibili.domain.VideoCollection;
-import com.foxmo.bilibili.domain.VideoLike;
-import com.foxmo.bilibili.domain.VideoTag;
+import com.foxmo.bilibili.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -38,4 +35,5 @@ public interface VideoMapper {
     Long selectVideoCollectionCount(Long videoId);
 
     VideoCollection selectVideoCollectionByVideoIdAndUserId(@Param("videoId") Long videoId, @Param("userId") Long userId);
+
 }

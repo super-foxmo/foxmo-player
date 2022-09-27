@@ -25,7 +25,7 @@ public class TokenUtil {
         Algorithm algorithm = Algorithm.RSA256(RSAUtil.getPublicKey(),RSAUtil.getPrivateKey());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.SECOND,120);
+        calendar.add(Calendar.HOUR,1);
         return JWT.create()
                 .withKeyId(String.valueOf(userId))
                 .withExpiresAt(calendar.getTime())  //到期时间
@@ -52,5 +52,16 @@ public class TokenUtil {
         }catch(Exception e){
             throw new ConditionException("非法用户token！");
         }
+    }
+
+    public static String generateRefreshToken(Long userId) throws Exception{
+        Algorithm algorithm = Algorithm.RSA256(RSAUtil.getPublicKey(),RSAUtil.getPrivateKey());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH,7);
+        return JWT.create()
+                .withKeyId(String.valueOf(userId))
+                .withExpiresAt(calendar.getTime())  //到期时间
+                .sign(algorithm);
     }
 }

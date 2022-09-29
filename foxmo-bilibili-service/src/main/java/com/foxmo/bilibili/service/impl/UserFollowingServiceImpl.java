@@ -30,6 +30,7 @@ public class UserFollowingServiceImpl implements UserFollowingService {
      * 添加用户关注
      * @param userFollowing
      */
+    @Override
     @Transactional  //开启事务处理
     public void addUserFollowing(UserFollowing userFollowing){
         Long groupId = userFollowing.getGroupId();
@@ -63,6 +64,8 @@ public class UserFollowingServiceImpl implements UserFollowingService {
      * 第二部：根据关注用户的id查询关注用户的基本信息
      * 第三步：将关注用户按关注分组进行分类
      */
+
+    @Override
     public List<FollowingGroup> getUserFollowingsByUserId(Long userId){
         //获取当前用户所有关注的用户
         List<UserFollowing> userFollowingList = userFollowingMapper.selectUserFollowingsByUserId(userId);
@@ -81,8 +84,8 @@ public class UserFollowingServiceImpl implements UserFollowingService {
                 }
             }
         }
-        //获取当前用户的所有关注分组
-        List<FollowingGroup> groupList = followingGroupService.getFollowingGroupsByUserId(userId);
+        //获取当前用户的所有关注分组(包含系统分组)
+        List<FollowingGroup> groupList = followingGroupService.getFollowingGroups(userId);
 
         FollowingGroup allGroup = new FollowingGroup();
         allGroup.setName(UserConstant.USER_FOLLOWING_GROUP_ALL_NAME);
@@ -94,7 +97,7 @@ public class UserFollowingServiceImpl implements UserFollowingService {
         for (FollowingGroup group : groupList){
             List<UserInfo> infoList = new ArrayList<>();
             for (UserFollowing userFollowing : userFollowingList){
-                if (group.getType().equals(String.valueOf(userFollowing.getGroupId()))){
+                if (group.getId().equals(userFollowing.getGroupId())){
                     infoList.add(userFollowing.getUserInfo());
                 }
             }
@@ -103,12 +106,13 @@ public class UserFollowingServiceImpl implements UserFollowingService {
         }
         return result;
     }
-
     /*
      * 第一步：获取当前用户的粉丝列表
      * 第二步：根据粉丝的用户id查询基本的信息
      * 第三步：查询当前用户是否已经该粉丝（互相关注）
      */
+
+    @Override
     public List<UserFollowing> getUsaerFensByUserId(Long userId){
         //获取当前用户的粉丝列表
         List<UserFollowing> fensList = userFollowingMapper.selectUserFollowingsByFollowingId(userId);
@@ -138,5 +142,45 @@ public class UserFollowingServiceImpl implements UserFollowingService {
         }
 
         return fensList;
+    }
+
+    /**
+     * 新增关注分组
+     * @param followingGroup
+     * @return
+     */
+    @Override
+    public Long addFollowingGroup(FollowingGroup followingGroup) {
+        followingGroup.setType(UserConstant.USER_FOLLOWING_GROUP_TYPE_CUSTOM);
+        followingGroup.setCreateTime(new Date());
+        followingGroupService.insertFollowingGroup(followingGroup);
+        Long groupId = followingGroup.getId();
+        return groupId;
+    }
+
+    /**
+     * 获取当前用户的所有自定义分组（不包含系统分组）
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<FollowingGroup> getFollowingGroupsByUserId(Long userId) {
+        return followingGroupService.getFollowingGroupsByUserId(userId);
+    }
+
+    @Override
+    public List<UserInfo> checkFollowingStatus(List<UserInfo> userInfoList, Long userId) {
+        //获取当前用户关注的所有用户
+        List<UserFollowing> userFollowingList = userFollowingMapper.selectUserFollowingsByUserId(userId);
+
+        for (UserInfo userInfo : userInfoList){
+            userInfo.setFollowed(false);
+            for (UserFollowing userFollowing : userFollowingList){
+                if (userInfo.getUserId().equals(userFollowing.getFollowingId())){
+                    userInfo.setFollowed(true);
+                }
+            }
+        }
+        return userInfoList;
     }
 }

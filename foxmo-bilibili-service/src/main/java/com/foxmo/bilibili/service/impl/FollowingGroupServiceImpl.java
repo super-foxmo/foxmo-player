@@ -25,6 +25,16 @@ public class FollowingGroupServiceImpl implements FollowingGroupService {
 
     @Override
     public List<FollowingGroup> getFollowingGroupsByUserId(Long userId) {
-        return followingGroupMapper.seleFollowingGroupByUserId(userId);
+        return followingGroupMapper.selectFollowingGroupsByUserId(userId);
+    }
+
+    @Override
+    public List<FollowingGroup> getFollowingGroups(Long userId) {
+        return followingGroupMapper.selectFollowingGroups(userId);
+    }
+
+    @Override
+    public void insertFollowingGroup(FollowingGroup followingGroup) {
+        followingGroupMapper.insertFollowingGroup(followingGroup);
     }
 }

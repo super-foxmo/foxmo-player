@@ -156,6 +156,12 @@
             <version>2.5.1</version>
         </dependency>
 
+        <!--elasticsearch-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
+
         <!--tomcat-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->

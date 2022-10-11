@@ -27,7 +27,6 @@ public class RocketMQUtil {
                     countDownLatch2.countDown();
                     System.out.println(sendResult.getMsgId());
                 }
-
                 @Override
                 public void onException(Throwable throwable) {
                     countDownLatch2.countDown();

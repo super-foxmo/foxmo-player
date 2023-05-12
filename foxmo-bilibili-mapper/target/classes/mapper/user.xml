@@ -10,7 +10,7 @@
         insert into
             t_user(phone,email,password,salt,createTime)
         values
-            (#{phone},#{email},#{password},#{salt},#{createTime})
+            (#{phone},#{email},#{password},#{salt},#{createTime});
     </insert>
 
     <select id="selectUserByPhone" parameterType="String" resultType="com.foxmo.bilibili.domain.User">
@@ -19,14 +19,14 @@
         from
             t_user
         where
-            phone = #{phone}
+            phone = #{phone};
     </select>
 
     <insert id="insertUserInfo" parameterType="com.foxmo.bilibili.domain.UserInfo">
         insert into
             t_user_info(user_id,nick,avatar,sign,gender,birth,createTime)
         values
-            (#{userId},#{nick},#{avatar},#{sign},#{gender},#{birth},#{createTime})
+            (#{userId},#{nick},#{avatar},#{sign},#{gender},#{birth},#{createTime});
     </insert>
 
     <select id="selectUserById" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.User">
@@ -35,7 +35,7 @@
         from
             t_user
         where
-            id = #{userId}
+            id = #{userId};
     </select>
 
     <select id="selectUserInfoByUserId" parameterType="java.lang.Long" resultType="com.foxmo.bilibili.domain.UserInfo">
@@ -44,7 +44,7 @@
         from
             t_user_info
         where
-            user_id = #{userId}
+            user_id = #{userId};
     </select>
 
     <update id="updateUser" parameterType="com.foxmo.bilibili.domain.User">
@@ -62,7 +62,7 @@
             </if>
             updateTime = #{updateTime}
         where
-            id = #{id}
+            id = #{id};
     </update>
 
     <update id="updateUserInfo" parameterType="com.foxmo.bilibili.domain.UserInfo">
@@ -86,7 +86,7 @@
             </if>
             updateTime = #{updateTime}
         where
-            user_id = #{userId}
+            user_id = #{userId};
     </update>
 
     <select id="selectUserInfosByIds" resultType="com.foxmo.bilibili.domain.UserInfo">
@@ -102,5 +102,83 @@
                 </foreach>
             </if>
         </where>
+    </select>
+    
+    <select id="pageCountUserInfos" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select 
+            count(1)
+        from
+            t_user_info
+        <where>
+            <if test="nick != null and nick != ''">
+                nick like '%${nick}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPageListUserInfo" parameterType="java.util.Map" resultType="com.foxmo.bilibili.domain.UserInfo">
+        select
+            *
+        from
+        t_user_info
+        <where>
+            <if test="nick != null and nick != ''">
+                nick like '%${nick}%'
+            </if>
+        </where>
+        order id desc
+        limit #{start},#{limit};
+    </select>
+
+    <select id="selectUserByPhoneOrEmail" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            phone = #{phone} or email = #{email};
+    </select>
+
+    <delete id="deleteRefreshToken">
+        delete from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken};
+    </delete>
+
+    <insert id="insertRefreshToken">
+        insert into
+            t_refresh_token(
+                    userId,
+                    refreshToken,
+                    createTime
+        )
+        values(
+                    #{userId},
+                    #{refreshToken},
+                    #{createTime}
+              );
+    </insert>
+
+    <select id="selectRefreshTokenDetail" parameterType="java.lang.String" resultType="com.foxmo.bilibili.domain.RefreshTokenDetail">
+        select
+            *
+        from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken};
+    </select>
+
+    <select id="batchGetUserInfoByUserIds" parameterType="java.util.List" resultType="com.foxmo.bilibili.domain.UserInfo">
+        select
+            *
+        from
+            t_user_info
+        where
+            userId in
+            <foreach collection="userIdList" item="userId" open="(" close=")" separator=",">
+                #{userId}
+            </foreach>
+        order by id desc;
     </select>
 </mapper>

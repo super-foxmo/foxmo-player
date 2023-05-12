@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> loginForDts(User user) throws Exception {
+    public Map<String, Object>  loginForDts(User user) throws Exception {
         String phone = user.getPhone() == null ? "" : user.getPhone();
         String email = user.getEmail() == null ? "" : user.getEmail();
         if (StringUtils.isNullOrEmpty(phone) && StringUtils.isNullOrEmpty(email)){
@@ -237,7 +237,6 @@ public class UserServiceImpl implements UserService {
         resultMap.put("refreshToken",refreshToken);
 
         return resultMap;
-
     }
 
     @Override

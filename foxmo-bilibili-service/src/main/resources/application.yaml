@@ -1,8 +1,11 @@
 spring:
   profiles:
     active: test
+  devtools:
+    restart:
+      enabled: true
 
-#servlet
+  #servlet
   servlet:
     multipart:
       max-file-size: 100MB
@@ -11,7 +14,7 @@ spring:
 
 mybatis:
   config-locations: classpath:mapper/*.xml
-  type-aliases-package: com.foxmo.bilibili.mapper
+  type-aliases-package: com.foxmo.bilibili.mapper   # 包扫描，mybatis自动实例化
 #  开启驼峰命名转换
   configuration:
     map-underscore-to-camel-case: true

@@ -62,11 +62,12 @@ public class FileServiceImpl implements FileService {
      * 上传文件
      * @param multipartFile     上传文件
      * @param bucketName        桶名
+     * @param userId        用户Id
      * @return
      * @throws Exception
      */
     @Override
-    public String uploadFile(MultipartFile multipartFile, String bucketName) throws Exception {
+    public String uploadFile(MultipartFile multipartFile, String bucketName,Long userId) throws Exception {
         if (multipartFile == null || bucketName == null){
             throw new ConditionException("参数异常！");
         }
@@ -78,6 +79,7 @@ public class FileServiceImpl implements FileService {
             String fileUrl = minioUtil.uploadFile(multipartFile, bucketName);
             //封装数据
             File file = new File();
+            file.setUserId(userId);
             file.setFileName(multipartFile.getOriginalFilename());
             file.setBucket(bucketName);
             file.setUrl(fileUrl);
@@ -93,12 +95,13 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 删除文件
-     * @param bucketName       桶名
-     * @param fileName      文件名
+     * @param file 文件
      * @throws Exception
      */
     @Override
-    public void deleteFile(String bucketName, String fileName) throws Exception{
+    public void deleteFile(File file) throws Exception{
+        String bucketName = file.getBucket();
+        String fileName = file.getFileName();
         if (StringUtils.isNullOrEmpty(bucketName) || StringUtils.isNullOrEmpty(fileName)){
             throw new ConditionException("参数异常！");
         }
@@ -121,8 +124,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void downloadFile(String bucketName, String fileName) throws Exception{
-        minioUtil.downloadFile(bucketName,fileName,DEFAULT_FILE_PATH + fileName);
+    public void downloadFile(File file) throws Exception{
+        minioUtil.downloadFile(file.getBucket(),file.getFileName(),DEFAULT_FILE_PATH + file.getFileName());
     }
 
 }

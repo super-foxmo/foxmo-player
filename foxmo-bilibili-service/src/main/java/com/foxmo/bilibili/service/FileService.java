@@ -1,5 +1,6 @@
 package com.foxmo.bilibili.service;
 
+import com.foxmo.bilibili.domain.File;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
@@ -10,9 +11,9 @@ public interface FileService {
 
     String getFileMD5(MultipartFile file) throws Exception;
 
-    String uploadFile(MultipartFile multipartFile, String bucketName) throws Exception;
+    String uploadFile(MultipartFile multipartFile, String bucketName,Long userId) throws Exception;
 
-    void deleteFile(String bucket, String fileName) throws Exception;
+    void deleteFile(File file) throws Exception;
 
-    void downloadFile(String bucketName, String fileName) throws Exception;
+    void downloadFile(File file) throws Exception;
 }

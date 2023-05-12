@@ -3,8 +3,10 @@ package com.foxmo.bilibili.config;
 import com.alibaba.fastjson.JSONObject;
 import com.foxmo.bilibili.domain.UserFollowing;
 import com.foxmo.bilibili.domain.UserMoment;
+import com.foxmo.bilibili.domain.constant.UserDanmusConstant;
 import com.foxmo.bilibili.domain.constant.UserMomentsConstant;
 import com.foxmo.bilibili.service.impl.UserFollowingServiceImpl;
+import com.foxmo.bilibili.service.impl.websocket.WebSocketService;
 import com.mysql.cj.util.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -25,7 +27,7 @@ import java.util.List;
 public class RocketMQConfig {
 
     @Value("${rocketmq.name.server.address}")
-    private String nameServerAddr = "127.0.0.1:9876";
+    private String nameServerAddr;
 
     @Autowired
     private RedisTemplate<String,String> redisTemplate;
@@ -35,18 +37,22 @@ public class RocketMQConfig {
 
     @Bean("momentsProducer")
     public DefaultMQProducer momentsProducer() throws  Exception{
+        //实例化消息生产者Producer
         DefaultMQProducer producer = new DefaultMQProducer(UserMomentsConstant.GROUP_MOMENTS);
+        //设置NameServer的地址
         producer.setNamesrvAddr(nameServerAddr);
+        //启动Producer实例
         producer.start();
         return producer;
     }
 
     @Bean("momentsConsumer")
     public DefaultMQPushConsumer momentsConsumer() throws Exception{
-        //推送方式
+        //实例化消费者（推送方式）
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(UserMomentsConstant.GROUP_MOMENTS);
+        //设置NameServer的地址
         consumer.setNamesrvAddr(nameServerAddr);
-
+        //订阅一个或多个Topic，以及Tag来过滤需要消费的消息
         consumer.subscribe(UserMomentsConstant.TOPIC_MOMENTS,"*");
         //注册监听器，实时监听关注用户的动态信息
         consumer.registerMessageListener(new MessageListenerConcurrently() {
@@ -83,6 +89,54 @@ public class RocketMQConfig {
                     }
 
                 }
+                //标记该消息已经被成功消费
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
+        });
+        //启动Consumer实例
+        consumer.start();
+        return consumer;
+    }
+
+    @Bean("danmusProducer")
+    public DefaultMQProducer danmusProducer() throws  Exception{
+        //实例化消息生产者Producer
+        DefaultMQProducer producer = new DefaultMQProducer(UserDanmusConstant.GROUP_DANMUS);
+        //设置NameServer的地址
+        producer.setNamesrvAddr(nameServerAddr);
+        //启动Producer实例
+        producer.start();
+        return producer;
+    }
+
+    @Bean("danmusConsumer")
+    public DefaultMQPushConsumer danmusConsumer() throws Exception{
+        //实例化消费者（推送方式）
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(UserDanmusConstant.GROUP_DANMUS);
+        //设置NameServer的地址
+        consumer.setNamesrvAddr(nameServerAddr);
+        //订阅一个或多个Topic，以及Tag来过滤需要消费的消息
+        consumer.subscribe(UserDanmusConstant.TOPIC_DANMUS,"*");
+        //注册监听器，实时监听关注用户的动态信息
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext Context) {
+                MessageExt msg = msgs.get(0);
+                String bodyStr = new String(msg.getBody());
+                JSONObject jsonObject = JSONObject.parseObject(bodyStr);
+                String sessionId = jsonObject.getString("sessionId");
+                String message = jsonObject.getString("message");
+
+                WebSocketService webSocketService = WebSocketService.WEBSOCKET_MAP.get(sessionId);
+                //判断用户与服务器是否已建立连接
+                if (webSocketService.getSession().isOpen()){
+                    try{
+                        webSocketService.sendMessage(message);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                //标记该消息已经被成功消费
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });

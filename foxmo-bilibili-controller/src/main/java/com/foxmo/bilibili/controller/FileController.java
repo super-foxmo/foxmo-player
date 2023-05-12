@@ -1,5 +1,7 @@
 package com.foxmo.bilibili.controller;
 
+import com.foxmo.bilibili.controller.support.UserSupport;
+import com.foxmo.bilibili.domain.File;
 import com.foxmo.bilibili.domain.JsonResponse;
 import com.foxmo.bilibili.domain.exception.ConditionException;
 import com.foxmo.bilibili.service.impl.FileServiceImpl;
@@ -17,12 +19,11 @@ import java.util.*;
 
 @RestController
 public class FileController {
+    @Autowired
+    private UserSupport userSupport;
 
     @Autowired
     private FileServiceImpl fileService;
-
-    @Autowired
-    private MinioUtil minioUtil;
 
     @PostMapping("/file-md5")
     public JsonResponse<String> getFileMD5(MultipartFile file) throws Exception {
@@ -45,53 +46,23 @@ public class FileController {
     //Minio 文件上传
     @PostMapping("/minio-files")
     public JsonResponse<String> uploadFile(MultipartFile multipartFile,String bucketName) throws Exception{
-        String fileUrl = fileService.uploadFile(multipartFile, bucketName);
+        String fileUrl = fileService.uploadFile(multipartFile, bucketName,userSupport.getCurrentUserId());
         return new JsonResponse<>(fileUrl);
     }
 
     //Minio 文件删除
     @DeleteMapping("/minio-files")
-    public JsonResponse<String> DeleteFile(String bucketName,String fileName) throws Exception{
-        fileService.deleteFile(bucketName,fileName);
-
+    public JsonResponse<String> DeleteFile(@RequestBody File file) throws Exception{
+        file.setUserId(userSupport.getCurrentUserId());
+        fileService.deleteFile(file);
         return JsonResponse.success();
     }
 
     //文件下载
     @GetMapping("/minio-files")
-    public JsonResponse<String> downloadFile(String bucketName,String fileName) throws Exception{
-        fileService.downloadFile(bucketName,fileName);
+    public JsonResponse<String> downloadFile(@RequestBody File file) throws Exception{
 
-        return JsonResponse.success();
-    }
-
-    @GetMapping("/test")
-    public JsonResponse<String> getInfo(MultipartFile file) throws Exception{
-//        List<Bucket> allBuckets = minioUtil.getAllBuckets();
-//        minioUtil.createBucket("file");
-//        Optional<Bucket> bucket = minioUtil.getBucket("video");
-//        //String objectURL = minioUtil.getObjectURL("video", "通信202-李晓辉-综测佐证.docx", 2);
-//
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("allBuckets",allBuckets);
-//        map.put("videoBucket",bucket);
-//       //map.put("objectURL",objectURL);
-
-//        minioUtil.removeObject("video","db_reggie.sql");
-//        minioUtil.removeObject("video","仿bilibili/imooc-bilibili-eureka-master.zip");
-//        minioUtil.removeBucket("file");
-
-//        StatObjectResponse objectInfo = minioUtil.getObjectInfo("video", "通信202-李晓d辉-综测佐证.docx");
-
-//        InputStream inputStream;
-//        try {
-//             inputStream = minioUtil.getObject("video", "通信202-李w晓辉-综测佐证.docx");
-//
-//        }catch (Exception e){
-//            throw new ConditionException("服务器中不存在该文件！");
-//        }
-//        MultipartFile multipartFile = minioUtil.getMultipartFile(inputStream);
-//        String fileMD5 = MD5Util.getFileMD5(multipartFile);
+        fileService.downloadFile(file);
 
         return JsonResponse.success();
     }

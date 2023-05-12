@@ -16,6 +16,7 @@ public class UserSupport {
      */
     public Long getCurrentUserId(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+        //验证token
         String token = requestAttributes.getRequest().getHeader("token");
         Long userId = TokenUtil.verifyToken(token);
         if (userId < 0){
